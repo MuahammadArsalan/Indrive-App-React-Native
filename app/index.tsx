@@ -125,8 +125,10 @@ const styles = StyleSheet.create({
   containera: {
     flex: 1,
   },
+
   map: {
     width: '100%',
     height: '100%',
   },
+  
 });
