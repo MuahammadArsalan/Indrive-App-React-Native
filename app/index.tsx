@@ -40,11 +40,9 @@ export default function App() {
         {/* <Text>{text}</Text> */}
       </View>
 
-
-
-
-    );
+    )
   }
+  
 
   return (
     <View style={styles.containera}>
