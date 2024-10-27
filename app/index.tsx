@@ -1,17 +1,20 @@
+
+
+
+
+
 import { useState, useEffect } from 'react';
 import { Platform, Text, View, StyleSheet } from 'react-native';
-
 import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
-  const [location, setLocation] = useState<any>(null);
-  const [errorMsg, setErrorMsg] = useState<any>(null);
+  const [location, setLocation] = useState<{}|null|any>(null);
+  const [errorMsg, setErrorMsg] = useState<null|{}|string |any>(null);
 
   useEffect(() => {
     (async () => {
-      
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
@@ -30,24 +33,37 @@ export default function App() {
     text = JSON.stringify(location);
   }
 
-  return (
 
+  if (!location) {
+    return (
+      <View style={styles.containera}>
+        {/* <Text>{text}</Text> */}
+      </View>
+
+
+
+
+    );
+  }
+
+  return (
     <View style={styles.containera}>
-      <MapView style={styles.map} 
-      initialRegion={{
-       latitude: location.coords.latitude,
-        longitude:location.coords.longitude,
-        latitudeDelta:0.001,
-        longitudeDelta:0.002,
-      }}
-        >
-          
-          <Marker coordinate={{
-            latitude:location.coords.latitude,
-            longitude:location.coords.longitude,
-            
-          }}></Marker>
-          </MapView>
+      <MapView
+        style={styles.map}
+        initialRegion={{
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          latitudeDelta: 0.001,
+          longitudeDelta: 0.002,
+        }}
+      >
+        <Marker
+          coordinate={{
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          }}
+        />
+      </MapView>
     </View>
   );
 }
