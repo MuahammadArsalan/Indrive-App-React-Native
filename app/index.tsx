@@ -4,14 +4,16 @@
 
 
 import { useState, useEffect } from 'react';
-import { Platform, Text, View, StyleSheet } from 'react-native';
+import { Platform, Text, View, StyleSheet, FlatList } from 'react-native';
 import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
   const [location, setLocation] = useState<{}|null|any>(null);
   const [errorMsg, setErrorMsg] = useState<null|{}|string |any>(null);
+const [Allplaces, setAllplaces] = useState<null|object|[]|any>(null)
+
+
 
   useEffect(() => {
     (async () => {
@@ -57,8 +59,11 @@ export default function App() {
   
   fetch('https://api.foursquare.com/v3/places/search?query=jubilee%20snack&ll=24.8446976%2C67.0990336&radius=100000', options)
     .then(res => res.json())
-    .then(res => console.log(res))
-    .catch(err => console.error(err));
+    .then(res => {
+      // console.log(res.results)
+      setAllplaces(res.results)
+    })
+    .catch(err => console.error(err))
 
 
 
@@ -70,7 +75,21 @@ export default function App() {
 
 
   return (
+
+    <>
+  {/* {Allplaces &&  <FlatList
+        data={Allplaces}
+        renderItem={({item}) => {
+          return <View>
+            {item.name}
+          </View>
+        }}
+        keyExtractor={item => item.id}
+      />} */}
+    
+    
     <View style={styles.containera}>
+
       <MapView
         style={styles.map}
         initialRegion={{
@@ -85,9 +104,10 @@ export default function App() {
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
           }}
-        />
+          />
       </MapView>
     </View>
+          </>
   );
 }
 
