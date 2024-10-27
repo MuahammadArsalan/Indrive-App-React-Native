@@ -42,7 +42,32 @@ export default function App() {
 
     )
   }
+
+
+
+
+
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: 'fsq3oK0SyucF1Rv9cSiPEejk3dBTKX6WKgy+/TLv7U5fJCU='
+    }
+  };
   
+  fetch('https://api.foursquare.com/v3/places/search?query=jubilee%20snack&ll=24.8446976%2C67.0990336&radius=100000', options)
+    .then(res => res.json())
+    .then(res => console.log(res))
+    .catch(err => console.error(err));
+
+
+
+
+
+
+
+  
+
 
   return (
     <View style={styles.containera}>
