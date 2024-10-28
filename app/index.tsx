@@ -109,14 +109,29 @@ const searchPlaces =  ()=>{
           <Text  onPress={()=>{searchPlaces()}}>Press Here</Text>
         </TouchableOpacity>
 
-{Allplaces &&   <FlatList
+        {Allplaces && <FlatList
         data={Allplaces}
         renderItem={({ item }: { item: { name: string } }) => {
           return <View style={styles.list}>
-          <Text onPress={() => searchPlaces()}>{item.name}</Text>
+            <Text>{item.name}</Text>
+          </View>
+        }}
+        keyExtractor={(item: { fsq_id: number|string }) => item.fsq_id
+        }
+      />}
+
+
+{/* 
+{Allplaces &&   <FlatList
+        data={Allplaces}
+        renderItem={( item :  { name: string }) => {
+          return <View style={styles.list}>
+          <Text onPress={() => searchPlaces(item)}>{item.name}</Text>
         </View>
         }}
-        keyExtractor={(item:{fsq_id:string}) => {item.fsq_id}}      />}
+        keyExtractor={(item:{fsq_id:string}) => {item.fsq_id}}      />} */}
+
+        
 {/* map */}
 
       <MapView
