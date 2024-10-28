@@ -7,12 +7,13 @@ import { useState, useEffect } from 'react';
 import { Platform, Text, View, StyleSheet, FlatList } from 'react-native';
 import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
+import { TextInput } from 'react-native';
 
 export default function App() {
   const [location, setLocation] = useState<{}|null|any>(null);
   const [errorMsg, setErrorMsg] = useState<null|{}|string |any>(null);
 const [Allplaces, setAllplaces] = useState<null|object|[]|any>(null)
-
+const [Search, setSearch] = useState<null | object>(null)
 
 
   useEffect(() => {
@@ -53,19 +54,21 @@ const [Allplaces, setAllplaces] = useState<null|object|[]|any>(null)
     method: 'GET',
     headers: {
       accept: 'application/json',
-      Authorization: 'fsq3oK0SyucF1Rv9cSiPEejk3dBTKX6WKgy+/TLv7U5fJCU='
+      Authorization: 'fsq32xO5rsUUQDDwDasyGuGN8poCEnzIb8fpkQnmkpXaHEw='
     }
   };
   
   fetch('https://api.foursquare.com/v3/places/search?query=jubilee%20snack&ll=24.8446976%2C67.0990336&radius=100000', options)
     .then(res => res.json())
     .then(res => {
+
       // console.log(res.results)
+
       setAllplaces(res.results)
     })
-    .catch(err => console.error(err))
-
-
+    .catch(err => {
+      console.error(err)
+    })
 
 
 
@@ -89,6 +92,15 @@ const [Allplaces, setAllplaces] = useState<null|object|[]|any>(null)
     
     
     <View style={styles.containera}>
+
+
+    <TextInput
+          style={styles.input}
+          onChangeText={setSearch}
+          value={Search}
+          placeholder="Search.."
+
+        />
 
       <MapView
         style={styles.map}
@@ -130,6 +142,11 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-
+  input: {
+    height:60,
+    margin: 42,
+    borderWidth: 1.5,
+    padding: 10,
+  },
 });
 
