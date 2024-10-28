@@ -117,7 +117,7 @@ const searchPlaces =  ()=>{
         </View>
         }}
         keyExtractor={(item:{fsq_id:string}) => {item.fsq_id}}      />}
-
+{/* map */}
       <MapView
         style={styles.map}
         initialRegion={{
