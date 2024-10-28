@@ -4,7 +4,7 @@
 
 
 import { useState, useEffect } from 'react';
-import { Platform, Text, View, StyleSheet, FlatList } from 'react-native';
+import { Platform, Text, View, StyleSheet, FlatList, TouchableOpacity, SafeAreaView } from 'react-native';
 import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
 import { TextInput } from 'react-native';
@@ -13,7 +13,7 @@ export default function App() {
   const [location, setLocation] = useState<{}|null|any>(null);
   const [errorMsg, setErrorMsg] = useState<null|{}|string |any>(null);
 const [Allplaces, setAllplaces] = useState<null|object|[]|any>(null)
-const [Search, setSearch] = useState<null | object>(null)
+const [Search, setSearch] = useState<null | any>(null)
 
 
   useEffect(() => {
@@ -48,6 +48,8 @@ const [Search, setSearch] = useState<null | object>(null)
 
 
 
+const searchPlaces =  ()=>{
+
 
 
   const options = {
@@ -58,18 +60,21 @@ const [Search, setSearch] = useState<null | object>(null)
     }
   };
   
-  fetch('https://api.foursquare.com/v3/places/search?query=jubilee%20snack&ll=24.8446976%2C67.0990336&radius=100000', options)
+  fetch(`https://api.foursquare.com/v3/places/search?query=${Search}&ll=24.8446976%2C67.0990336&radius=100000`, options)
     .then(res => res.json())
     .then(res => {
 
       // console.log(res.results)
 
-      setAllplaces(res.results)
+      setAllplaces(res.results);
+
+    
     })
     .catch(err => {
       console.error(err)
     })
 
+  }
 
 
 
@@ -99,8 +104,19 @@ const [Search, setSearch] = useState<null | object>(null)
           onChangeText={setSearch}
           value={Search}
           placeholder="Search.."
-
         />
+ <TouchableOpacity style={styles.button}>
+          <Text  onPress={()=>{searchPlaces()}}>Press Here</Text>
+        </TouchableOpacity>
+
+{Allplaces &&   <FlatList
+        data={Allplaces}
+        renderItem={({ item }: { item: { name: string } }) => {
+          return <View style={styles.list}>
+          <Text onPress={() => searchPlaces()}>{item.name}</Text>
+        </View>
+        }}
+        keyExtractor={(item:{fsq_id:string}) => {item.fsq_id}}      />}
 
       <MapView
         style={styles.map}
@@ -147,6 +163,29 @@ const styles = StyleSheet.create({
     margin: 42,
     borderWidth: 1.5,
     padding: 10,
+  },  button: {
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    padding: 13,
+    margin:20,
+    // marginTop:0,r
+    marginHorizontal:100
   },
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 32,
+  },
+  list: {
+    backgroundColor: 'gray',
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    padding: 5,
+    width: 280
+  }
 });
 
