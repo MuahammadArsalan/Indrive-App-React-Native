@@ -12,8 +12,8 @@ import { TextInput } from 'react-native';
 export default function App() {
   const [location, setLocation] = useState<{}|null|any>(null);
   const [errorMsg, setErrorMsg] = useState<null|{}|string |any>(null);
+  const [Search, setSearch] = useState<null | any>(null)
 const [Allplaces, setAllplaces] = useState<null|object|[]|any>(null)
-const [Search, setSearch] = useState<null | any>(null)
 
 
   useEffect(() => {
@@ -66,8 +66,9 @@ const searchPlaces =  ()=>{
 
       console.log(res.results)
 
-      setAllplaces(res.results);
-
+      setAllplaces(res.results)
+      console.log(Allplaces);
+      
     })
     .catch(err => {
       console.error(err)
@@ -96,17 +97,16 @@ const searchPlaces =  ()=>{
           placeholder="Search.."
         />
  <TouchableOpacity style={styles.button}>
-          <Text  onPress={()=>{searchPlaces()}}>Press Here</Text>
+          <Text  onPress={searchPlaces}>Press Here</Text>
         </TouchableOpacity>
 
-<View>
 {/* {Allplaces && return  <FlatList
         data={Allplaces}
         renderItem={({item}) => <Item title={item.title} />}
         keyExtractor={item => item.id}
-      />} */}
+        />} */}
 
-</View>
+        <View>
 
 
         {Allplaces && < FlatList
@@ -115,7 +115,7 @@ const searchPlaces =  ()=>{
           // console.log(item.name);
           
           return <View style={styles.list}>
-            <Text>{item.name}</Text>
+            {/* <Text>{item.name}</Text> */}
           </View>
         }}
         keyExtractor={(item: { fsq_id: number|string }) => {
@@ -124,6 +124,7 @@ const searchPlaces =  ()=>{
         }
       />}
 
+        </View>
 
 {/* 
 {Allplaces &&   <FlatList
