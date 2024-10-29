@@ -1,4 +1,4 @@
-
+//  Screen par location render nhi hoi seach k btn k click par
 
 
 
@@ -109,14 +109,20 @@ const searchPlaces =  ()=>{
           <Text  onPress={()=>{searchPlaces()}}>Press Here</Text>
         </TouchableOpacity>
 
-        {Allplaces && <FlatList
+        {Allplaces && < FlatList
         data={Allplaces}
         renderItem={({ item }: { item: { name: string } }) => {
+          console.log(item.name);
+          
           return <View style={styles.list}>
             <Text>{item.name}</Text>
+            
+            
           </View>
         }}
-        keyExtractor={(item: { fsq_id: number|string }) => item.fsq_id
+        keyExtractor={(item: { fsq_id: number|string }) => {
+          item.fsq_id
+        }
         }
       />}
 
