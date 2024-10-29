@@ -64,11 +64,10 @@ const searchPlaces =  ()=>{
     .then(res => res.json())
     .then(res => {
 
-      // console.log(res.results)
+      console.log(res.results)
 
       setAllplaces(res.results);
 
-    
     })
     .catch(err => {
       console.error(err)
@@ -85,16 +84,7 @@ const searchPlaces =  ()=>{
   return (
 
     <>
-  {/* {Allplaces &&  <FlatList
-        data={Allplaces}
-        renderItem={({item}) => {
-          return <View>
-            {item.name}
-          </View>
-        }}
-        keyExtractor={item => item.id}
-      />} */}
-    
+
     
     <View style={styles.containera}>
 
@@ -109,15 +99,23 @@ const searchPlaces =  ()=>{
           <Text  onPress={()=>{searchPlaces()}}>Press Here</Text>
         </TouchableOpacity>
 
+<View>
+{/* {Allplaces && return  <FlatList
+        data={Allplaces}
+        renderItem={({item}) => <Item title={item.title} />}
+        keyExtractor={item => item.id}
+      />} */}
+
+</View>
+
+
         {Allplaces && < FlatList
         data={Allplaces}
         renderItem={({ item }: { item: { name: string } }) => {
-          console.log(item.name);
+          // console.log(item.name);
           
           return <View style={styles.list}>
             <Text>{item.name}</Text>
-            
-            
           </View>
         }}
         keyExtractor={(item: { fsq_id: number|string }) => {
@@ -207,7 +205,8 @@ const styles = StyleSheet.create({
     borderBottomColor: 'black',
     borderBottomWidth: 1,
     padding: 5,
-    width: 280
+    width: 280,
+    color:"black"
   }
 });
 
