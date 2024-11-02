@@ -59,7 +59,7 @@ function searchPlaces(){
 .then((res)=>{
   // console.log(res.predictions);
   setPlacesDetails(res.predictions)
-  console.log(placesDetails);
+  // console.log(placesDetails);
   
   
 })
@@ -95,7 +95,25 @@ return (
 <TouchableOpacity style={styles.button}>
         <Text  onPress={() => {searchPlaces()}}>Search</Text>
       </TouchableOpacity>
+{placesDetails &&  <View style={styles.con}>
 
+<FlatList
+        data={placesDetails}
+        // renderItem={(item:{description:string}) => {
+        renderItem={({item}) => {
+
+<View style={styles.conChild}>
+
+<Text>{item.description}</Text>
+
+</View>
+
+
+        } }
+        keyExtractor={item => item.place_id}
+      />
+
+</View>}
 
       
 {/* map */}
@@ -135,7 +153,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
+    padding: 10,
+   
   },
   paragraph: {
     fontSize: 18,
@@ -151,15 +170,18 @@ const styles = StyleSheet.create({
   },
   input: {
     height:60,
-    margin: 42,
+    margin: 22,
     borderWidth: 1.5,
+    borderRadius:20,
     padding: 10,
+    borderColor:"green"
   },  button: {
     alignItems: 'center',
     backgroundColor: '#DDDDDD',
     padding: 13,
-    margin:20,
+    margin:10,
     // marginTop:0,r
+    borderRadius:20,
     marginHorizontal:100
   },
   item: {
@@ -178,7 +200,29 @@ const styles = StyleSheet.create({
     padding: 5,
     width: 280,
     color:"black"
-  }
+  },
+  con:{
+    height:320,
+    marginHorizontal:40,
+    borderColor:"grey",
+    borderWidth:2,
+    borderRadius:40,
+    position:"relative",
+    zIndex:2
+
+    
+
+  },
+  conChild:{
+    height:'auto',
+    marginHorizontal:10,
+    // borderColor:"grey",
+    borderWidth:2,
+marginTop:20,
+borderRadius:7,
+opacity:0.5,
+
+}
 });
 
 
