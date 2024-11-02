@@ -9,13 +9,13 @@ import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
 import { TextInput } from 'react-native';
 
+
 export default function App() {
+
   const [location, setLocation] = useState<{}|null|any>(null);
   const [errorMsg, setErrorMsg] = useState<null|{}|string |any>(null);
-  const [Search, setSearch] = useState<null | any>(null)
-const [Allplaces, setAllplaces] = useState<null|object|[]|any>(null)
-
-
+  const [Search, setSearch] = useState<null | any>('')
+const [Allplaces, setAllplaces] = useState<null|object|[]|any>([])
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -48,117 +48,83 @@ const [Allplaces, setAllplaces] = useState<null|object|[]|any>(null)
 
 
 
-const searchPlaces =  ()=>{
+function searchPlaces(){
 
-
-
-  const options = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      Authorization: 'fsq32xO5rsUUQDDwDasyGuGN8poCEnzIb8fpkQnmkpXaHEw='
-    }
-  };
   
-  fetch(`https://api.foursquare.com/v3/places/search?query=${Search}&ll=24.8446976%2C67.0990336&radius=100000`, options)
-    .then(res => res.json())
-    .then(res => {
+{Search ?  fetch(`https://maps.gomaps.pro/maps/api/place/queryautocomplete/json?input=${Search}&key=AlzaSyDs7U8F4HhudlByBwmyxEDc6GG1FnOPF9z`)
+.then((res)=>{
+ return res.json()
+})
+.then((res)=>{
+  console.log(res);
+  
+})
+.catch((err)=>{console.log(err);
+})
 
-      console.log(res.results)
 
-      setAllplaces(res.results)
-      console.log(Allplaces);
+// console.log(res)
+: alert('Not Found')} 
+
+
+
+}
+
+
+
+
+
+return (
+
+  <>
+
+  
+  <View style={styles.containera}>
+
+
+  <TextInput
+        style={styles.input}
+        onChangeText={setSearch}
+        value={Search}
+        placeholder="Search.."
+      />
+<TouchableOpacity style={styles.button}>
+        <Text  onPress={() => {searchPlaces()}}>Search</Text>
+      </TouchableOpacity>
+
+
       
-    })
-    .catch(err => {
-      console.error(err)
-    })
-
-  }
-
-
-
-
-  
-
-
-  return (
-
-    <>
-
-    
-    <View style={styles.containera}>
-
-
-    <TextInput
-          style={styles.input}
-          onChangeText={setSearch}
-          value={Search}
-          placeholder="Search.."
-        />
- <TouchableOpacity style={styles.button}>
-          <Text  onPress={searchPlaces}>Press Here</Text>
-        </TouchableOpacity>
-
-{/* {Allplaces && return  <FlatList
-        data={Allplaces}
-        renderItem={({item}) => <Item title={item.title} />}
-        keyExtractor={item => item.id}
-        />} */}
-
-        <View>
-
-
-        {Allplaces && < FlatList
-        data={Allplaces}
-        renderItem={({ item }: { item: { name: string } }) => {
-          // console.log(item.name);
-          
-          return <View style={styles.list}>
-            {/* <Text>{item.name}</Text> */}
-          </View>
-        }}
-        keyExtractor={(item: { fsq_id: number|string }) => {
-          item.fsq_id
-        }
-        }
-      />}
-
-        </View>
-
-{/* 
-{Allplaces &&   <FlatList
-        data={Allplaces}
-        renderItem={( item :  { name: string }) => {
-          return <View style={styles.list}>
-          <Text onPress={() => searchPlaces(item)}>{item.name}</Text>
-        </View>
-        }}
-        keyExtractor={(item:{fsq_id:string}) => {item.fsq_id}}      />} */}
-
-        
 {/* map */}
 
-      <MapView
-        style={styles.map}
-        initialRegion={{
+    <MapView
+      style={styles.map}
+      initialRegion={{
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.002,
+      }}
+    >
+      <Marker
+        coordinate={{
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
-          latitudeDelta: 0.001,
-          longitudeDelta: 0.002,
         }}
-      >
-        <Marker
-          coordinate={{
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-          }}
-          />
-      </MapView>
-    </View>
-          </>
-  );
+        />
+    </MapView>
+  </View>
+  
+  <Text>aaknjbdjbd</Text>
+        </>
+)
+
+
 }
+
+
+
+
+  
 
 const styles = StyleSheet.create({
   container: {
@@ -211,3 +177,87 @@ const styles = StyleSheet.create({
   }
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//   // const options = {
+//   //   method: 'GET',
+//   //   headers: {
+//   //     accept: 'application/json',
+//   //     Authorization: 'fsq32xO5rsUUQDDwDasyGuGN8poCEnzIb8fpkQnmkpXaHEw='
+//   //   }
+//   // };
+  
+//   // fetch(`https://api.foursquare.com/v3/places/search?query=${Search}&ll=24.8446976%2C67.0990336&radius=100000`, options)
+//   //   .then(res => res.json())
+//   //   .then(res => {
+
+//   //     console.log(res.results)
+
+//   //     setAllplaces(res.results)
+//   //     console.log(Allplaces);
+      
+//   //   })
+//   //   .catch(err => {
+//   //     console.error(err)
+//   //   })
+
+
+
+
+
+
+
+
+
+
+
+
+
+//   // const options = {
+//   //   method: 'GET',
+//   //   headers: {
+//   //     accept: 'application/json',
+//   //     Authorization: 'fsq32xO5rsUUQDDwDasyGuGN8poCEnzIb8fpkQnmkpXaHEw='
+//   //   }
+//   // };
+
+//   // fetch(`https://api.foursquare.com/v3/places/search?query=${search}&ll=${location.coords.latitude}%2C${location.coords.longitude}&radius=100000`, options)
+
+
+//   //   .then(res => res.json())
+//   //   .then(res => {
+//   //     Allplaces(res.results)
+//   //     log
+//   //     console.log(Allplaces);
+      
+//   //   })
+//   //   .catch(err => console.error(err));
+//   // // console.log(search)
