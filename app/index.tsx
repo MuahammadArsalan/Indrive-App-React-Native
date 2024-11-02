@@ -4,18 +4,22 @@
 
 
 import { useState, useEffect } from 'react';
-import { Platform, Text, View, StyleSheet, FlatList, TouchableOpacity, SafeAreaView } from 'react-native';
+import { Platform, Text, View, StyleSheet, FlatList, TouchableOpacity, SafeAreaView, FlatListComponent } from 'react-native';
 import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
 import { TextInput } from 'react-native';
-
+interface AllPlaces {
+  fsq_id: string;
+  name: string
+}
 
 export default function App() {
 
   const [location, setLocation] = useState<{}|null|any>(null);
   const [errorMsg, setErrorMsg] = useState<null|{}|string |any>(null);
   const [Search, setSearch] = useState<null | any>('')
-const [placesDetails, setPlacesDetails] = useState<null|object|[]|any>(null)
+
+const [placesDetails, setPlacesDetails] = useState<null|AllPlaces[]|any>(null)
 const [placesLL, setplacesLL] = useState<null|object|[]|any>(null)
   useEffect(() => {
     (async () => {
@@ -49,30 +53,54 @@ const [placesLL, setplacesLL] = useState<null|object|[]|any>(null)
 
 
 
-function searchPlaces(){
+// function searchPlaces(){
 
   
-{Search ?  fetch(`https://maps.gomaps.pro/maps/api/place/queryautocomplete/json?input=${Search}&key=AlzaSyDs7U8F4HhudlByBwmyxEDc6GG1FnOPF9z`)
-.then((res)=>{
- return res.json()
-})
-.then((res)=>{
-  // console.log(res.predictions);
-  setPlacesDetails(res.predictions)
-  // console.log(placesDetails);
+// {Search ?  fetch(`https://maps.gomaps.pro/maps/api/place/queryautocomplete/json?input=${Search}&key=AlzaSyDs7U8F4HhudlByBwmyxEDc6GG1FnOPF9z`)
+// .then((res)=>{
+//  return res.json()
+// })
+// .then((res)=>{
+//   // console.log(res.predictions);
+//   setPlacesDetails(res.predictions)
+//   // console.log(placesDetails);
+
   
   
-})
-.catch((err)=>{console.log(err);
-})
+// })
+// .catch((err)=>{console.log(err);
+// })
 
 
-// console.log(res)
-: alert('Not Found')} 
+// // console.log(res)
+// : alert('Not Found')} 
 
 
 
+// }
+
+
+
+const searchPlaces = () => {
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+      Authorization: 'fsq3qbL9ORBTq2ZaS6TUHxpAQZNDJjTlkT2lBeAynwmhZ8I='
+    }
+  };
+
+  fetch(`https://api.foursquare.com/v3/places/search?query=${Search}&ll=${location.coords.latitude}%2C${location.coords.longitude}&radius=100000`, options)
+
+
+    .then(res => res.json())
+    .then(res => {
+      setPlacesDetails(res.results)
+    })
+    .catch(err => console.error(err));
+  console.log(Search)
 }
+
 
 
 
@@ -80,9 +108,6 @@ function searchPlaces(){
 
 return (
 
-  <>
-
-  
   <View style={styles.containera}>
 
 
@@ -95,27 +120,81 @@ return (
 <TouchableOpacity style={styles.button}>
         <Text  onPress={() => {searchPlaces()}}>Search</Text>
       </TouchableOpacity>
-{placesDetails &&  <View style={styles.con}>
+
+      {placesDetails && <FlatList
+        data={placesDetails}
+        renderItem={({ item }: { item: { name: string } }) => {
+          return <View style={styles.list}>
+            <Text>{item.name}</Text>
+          </View>
+        }}
+        keyExtractor={(item: { fsq_id: string }) => item.fsq_id
+        }
+      />}
+{/* {placesDetails  && <View style={styles.con}> 
 
 <FlatList
+        data={placesDetails}
+        renderItem={({item}) =>{
+
+return <View style={styles.conChild}>
+
+<Text style={styles.conText}></Text>
+
+</View>
+        }}
+
+        keyExtractor={item => item.id}
+      />
+
+
+
+</View> } */}
+
+{/* 
+ {placesDetails && <FlatList
         data={placesDetails}
         // renderItem={(item:{description:string}) => {
         renderItem={({item}) => {
 
-<View style={styles.conChild}>
+// return <View style={styles.con}>
 
-<Text>{item.description}</Text>
+return <View style={styles.conChild}>
+
+<Text style={styles.conText}>skbdsbdksbdk</Text>
 
 </View>
+
+
+   
+
 
 
         } }
         keyExtractor={item => item.place_id}
       />
 
-</View>}
+}   */}
 
-      
+
+{placesDetails && <FlatList
+        data={placesDetails}
+        renderItem={( item ) => {
+          return <View style={styles.list}>
+            <Text onPress={() => searchPlaces()}>skdbsdkb</Text>
+          </View>
+        }}
+        keyExtractor={(item: { place_id: string }) => item.place_id
+        }
+      />}
+
+
+
+
+
+
+
+
 {/* map */}
 
     <MapView
@@ -136,8 +215,8 @@ return (
     </MapView>
   </View>
   
-  <Text>aaknjbdjbd</Text>
-        </>
+ 
+     
 )
 
 
@@ -222,17 +301,14 @@ marginTop:20,
 borderRadius:7,
 opacity:0.5,
 
+},
+conText:{
+fontSize:15,
+letterSpacing:2,
+
+
 }
 });
-
-
-
-
-
-
-
-
-
 
 
 
