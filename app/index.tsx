@@ -19,7 +19,7 @@ export default function App() {
   const [errorMsg, setErrorMsg] = useState<null|{}|string |any>(null);
   const [Search, setSearch] = useState<null | any>('')
 
-const [placesDetails, setPlacesDetails] = useState<null|AllPlaces[]|any>(null)
+const [placesDetails, setPlacesDetails] = useState<null|AllPlaces[]>(null)
 const [placesLL, setplacesLL] = useState<null|object|[]|any>(null)
   useEffect(() => {
     (async () => {
@@ -98,7 +98,7 @@ const searchPlaces = () => {
       setPlacesDetails(res.results)
     })
     .catch(err => console.error(err));
-  console.log(Search)
+  // console.log(Search)
 }
 
 
@@ -123,6 +123,7 @@ return (
 
       {placesDetails && <FlatList
         data={placesDetails}
+
         renderItem={({ item }: { item: { name: string } }) => {
           return <View style={styles.list}>
             <Text>{item.name}</Text>
@@ -177,16 +178,6 @@ return <View style={styles.conChild}>
 }   */}
 
 
-{placesDetails && <FlatList
-        data={placesDetails}
-        renderItem={( item ) => {
-          return <View style={styles.list}>
-            <Text onPress={() => searchPlaces()}>skdbsdkb</Text>
-          </View>
-        }}
-        keyExtractor={(item: { place_id: string }) => item.place_id
-        }
-      />}
 
 
 
