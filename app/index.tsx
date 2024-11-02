@@ -149,8 +149,8 @@ return <View style={styles.conChild}>
       />
 
 
-
 </View> } */}
+
 
 {/* 
  {placesDetails && <FlatList
