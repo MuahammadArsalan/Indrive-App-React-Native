@@ -15,7 +15,8 @@ export default function App() {
   const [location, setLocation] = useState<{}|null|any>(null);
   const [errorMsg, setErrorMsg] = useState<null|{}|string |any>(null);
   const [Search, setSearch] = useState<null | any>('')
-const [Allplaces, setAllplaces] = useState<null|object|[]|any>([])
+const [placesDetails, setPlacesDetails] = useState<null|object|[]|any>(null)
+const [placesLL, setplacesLL] = useState<null|object|[]|any>(null)
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -56,7 +57,10 @@ function searchPlaces(){
  return res.json()
 })
 .then((res)=>{
-  console.log(res);
+  // console.log(res.predictions);
+  setPlacesDetails(res.predictions)
+  console.log(placesDetails);
+  
   
 })
 .catch((err)=>{console.log(err);
