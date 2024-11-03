@@ -4,9 +4,9 @@
 
 
 import { useState, useEffect } from 'react';
-import { Platform, Text, View, StyleSheet, FlatList, TouchableOpacity, SafeAreaView, FlatListComponent } from 'react-native';
+import { Platform, Text, View, StyleSheet, FlatList, TouchableOpacity, SafeAreaView, FlatListComponent, registerCallableModule } from 'react-native';
 import * as Location from 'expo-location';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, Polyline } from 'react-native-maps';
 import { TextInput } from 'react-native';
 interface AllPlaces {
   fsq_id: string;
@@ -18,10 +18,12 @@ export default function App() {
   const [location, setLocation] = useState<{}|null|any>(null);
   const [errorMsg, setErrorMsg] = useState<null|{}|string |any>(null);
   const [Search, setSearch] = useState<null | any>('')
-  const [selectedPlace, setSelectedPlace] = useState(null);
 
-const [placesDetails, setPlacesDetails] = useState<null|AllPlaces[]>(null)
-const [placesLL, setplacesLL] = useState<null|object|[]|any>(null)
+  const [region, setRegion] = useState<any>(null);
+const [placesDetailsLL, setPlacesDetailsLL] = useState<null|AllPlaces[]>(null)
+const [placesDetailsDesc, setPlacesDetailsDesc] = useState<null|any>(null)
+
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -54,7 +56,7 @@ const [placesLL, setplacesLL] = useState<null|object|[]|any>(null)
 
 
 
-function searchPlaces(){
+function searchPlacesDescFunc(){
 
   
 {Search ?  fetch(`https://maps.gomaps.pro/maps/api/place/queryautocomplete/json?input=${Search}&key=AlzaSyDs7U8F4HhudlByBwmyxEDc6GG1FnOPF9z`)
@@ -63,8 +65,8 @@ function searchPlaces(){
 
 })
 .then((res)=>{
-  console.log(res.predictions);
-  setPlacesDetails(res.predictions)
+  // console.log(res.predictions);
+  setPlacesDetailsDesc(res.predictions)
   
   // console.log(placesDetails);
 
@@ -85,26 +87,40 @@ function searchPlaces(){
 
 
 
+const searchPlacesllFunc = (item:{place_id:string}) => {
 
-// const searchPlaces = () => {
-//   const options = {
-//     method: 'GET',
-//     headers: {
-//       accept: 'application/json',
-//       Authorization: 'fsq3qbL9ORBTq2ZaS6TUHxpAQZNDJjTlkT2lBeAynwmhZ8I='
-//     }
-//   };
+setPlacesDetailsDesc(null)
+  fetch(`https://maps.gomaps.pro/maps/api/place/details/json?place_id=${item.place_id}&key=AlzaSyiiV2_A9cr7d7jCOvGIqIJJh94acsfgrCc`)
+  .then(response => response.json())
+  .then(data => {
+    const location = data.result.geometry.location;
+    // console.log(`Latitude: ${location.lat}, Longitude: ${location.lng}`);
+setPlacesDetailsLL(location)
+// {placesDetailsLL&& console.log(placesDetailsLL)}  
+  
 
-//   fetch(`https://api.foursquare.com/v3/places/search?query=${Search}&ll=${location.coords.latitude}%2C${location.coords.longitude}&radius=100000`, options)
+})
+  .catch(err => console.log(err));
 
 
-//     .then(res => res.json())
-//     .then(res => {
-//       setPlacesDetails(res.results)
-//     })
-//     .catch(err => console.error(err));
-//   // console.log(Search)
-// }
+
+}
+
+const singlePlace = () => {
+  // setPlacesDetailsDesc(null);
+//  console.log( placesDetailsLL.lat);
+ 
+  setRegion({
+    latitude: placesDetailsLL.lat,
+    longitude: placesDetailsLL.lng,
+    latitudeDelta: 0.001,
+    longitudeDelta: 0.001,
+  })
+
+}
+
+
+
 // useEffect(()=>{
   
 
@@ -119,21 +135,12 @@ function searchPlaces(){
 // },[])
 
 
-const handlePlaceSelect = (item) => {
-  // Use place.place_id to get more details about this place
-  fetch(`https://maps.gomaps.pro/maps/api/place/details/json?place_id=${item.place_id}&key=YOUR_API_KEY`)
-    .then((res) => res.json())
-    .then((data) => {
-      const location = data.result.geometry.location; // Extract latitude and longitude
-      // setSelectedPlace(location); // Update the selected place state
-    console.log(location);
-    
-    })
-    .catch((err) => console.log(err));
-};
 
 
 return (
+
+
+
 
   <View style={styles.containera}>
 
@@ -145,18 +152,20 @@ return (
         placeholder="Search.."
       />
 <TouchableOpacity style={styles.button}>
-        <Text  onPress={() => {searchPlaces()}}>Search</Text>
+        <Text  onPress={() => {searchPlacesDescFunc()}}>Search</Text>
       </TouchableOpacity>
 
-      {placesDetails && <FlatList
-        data={placesDetails}
+      {placesDetailsDesc && <FlatList
+        data={placesDetailsDesc}
+     
 
         renderItem={({ item }: { item: { description: string } }) => {
      
+// console.log(item);
 
-return <View style={styles.conChild}  onPress={() => {handlePlaceSelect(item)}}>
+return <View style={styles.conChild}  >
 
-<Text style={styles.conText}>{item.description}</Text>
+<Text onPress={()=>{searchPlacesllFunc(item), singlePlace()}} style={styles.conText}>{item.description}</Text>
 
 </View>
 
@@ -167,10 +176,9 @@ return <View style={styles.conChild}  onPress={() => {handlePlaceSelect(item)}}>
 
 
 
-
 {/* map */}
 
-    <MapView
+{location &&     <MapView region={region} onRegionChangeComplete={setRegion} 
       style={styles.map}
       initialRegion={{
         latitude: location.coords.latitude,
@@ -185,7 +193,17 @@ return <View style={styles.conChild}  onPress={() => {handlePlaceSelect(item)}}>
           longitude: location.coords.longitude,
         }}
         />
-    </MapView>
+
+{placesDetailsLL&& <Marker coordinate={{
+  latitude:placesDetailsLL.lat,
+  longitude:placesDetailsLL.lng,
+
+}}></Marker>
+}
+
+{placesDetailsLL && <Polyline coordinates={[{latitude:location.coords.latitude,longitude:location.coords.longitude},{latitude:placesDetailsLL.lat,longitude:placesDetailsLL.lng}]}/>}
+
+    </MapView>}
   </View>
   
  
