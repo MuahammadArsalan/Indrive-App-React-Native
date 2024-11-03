@@ -133,7 +133,6 @@ function poly () {
   .catch(err => console.error(err));
 }
 
-
 return (
   <View style={styles.containera}>
 
