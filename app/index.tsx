@@ -71,7 +71,7 @@ function searchPlacesDescFunc(){
   // console.log(placesDetails);
 
   
-  
+  setSearch(null)
 })
 .catch((err)=>{console.log(err);
 })
@@ -95,7 +95,7 @@ setPlacesDetailsDesc(null)
   .then(data => {
     const location = data.result.geometry.location;
     // console.log(`Latitude: ${location.lat}, Longitude: ${location.lng}`);
-setPlacesDetailsLL(location)
+{location && setPlacesDetailsLL(location)}
 // {placesDetailsLL&& console.log(placesDetailsLL)}  
   
 
@@ -110,12 +110,12 @@ const singlePlace = () => {
   // setPlacesDetailsDesc(null);
 //  console.log( placesDetailsLL.lat);
  
-  setRegion({
+  {placesDetailsLL&& setRegion({
     latitude: placesDetailsLL.lat,
     longitude: placesDetailsLL.lng,
     latitudeDelta: 0.001,
     longitudeDelta: 0.001,
-  })
+  })}
 
 }
 
@@ -138,7 +138,8 @@ function poly () {
   fetch(`https://maps.gomaps.pro/maps/api/directions/json?origin=${location.coords.latitude},${location.coords.longitude}&destination=${placesDetailsLL.lat},${placesDetailsLL.lng}&key=AlzaSyiiV2_A9cr7d7jCOvGIqIJJh94acsfgrCc`)
   .then(response => response.json())
   .then(data => {
-    console.log(data); 
+    console.log(data);
+    
   })
   .catch(err => console.error(err));
 }
