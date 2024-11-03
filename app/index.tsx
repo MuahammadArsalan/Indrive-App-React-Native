@@ -18,6 +18,7 @@ export default function App() {
   const [location, setLocation] = useState<{}|null|any>(null);
   const [errorMsg, setErrorMsg] = useState<null|{}|string |any>(null);
   const [Search, setSearch] = useState<null | any>('')
+  const [selectedPlace, setSelectedPlace] = useState(null);
 
 const [placesDetails, setPlacesDetails] = useState<null|AllPlaces[]>(null)
 const [placesLL, setplacesLL] = useState<null|object|[]|any>(null)
@@ -53,57 +54,83 @@ const [placesLL, setplacesLL] = useState<null|object|[]|any>(null)
 
 
 
-// function searchPlaces(){
+function searchPlaces(){
 
   
-// {Search ?  fetch(`https://maps.gomaps.pro/maps/api/place/queryautocomplete/json?input=${Search}&key=AlzaSyDs7U8F4HhudlByBwmyxEDc6GG1FnOPF9z`)
-// .then((res)=>{
-//  return res.json()
-// })
-// .then((res)=>{
-//   // console.log(res.predictions);
-//   setPlacesDetails(res.predictions)
-//   // console.log(placesDetails);
+{Search ?  fetch(`https://maps.gomaps.pro/maps/api/place/queryautocomplete/json?input=${Search}&key=AlzaSyDs7U8F4HhudlByBwmyxEDc6GG1FnOPF9z`)
+.then((res)=>{
+ return res.json()
+
+})
+.then((res)=>{
+  console.log(res.predictions);
+  setPlacesDetails(res.predictions)
+  
+  // console.log(placesDetails);
 
   
   
-// })
-// .catch((err)=>{console.log(err);
-// })
+})
+.catch((err)=>{console.log(err);
+})
 
 
-// // console.log(res)
-// : alert('Not Found')} 
-
-
-
-// }
+// console.log(res)
+: alert('Not Found')} 
 
 
 
-const searchPlaces = () => {
-  const options = {
-    method: 'GET',
-    headers: {
-      accept: 'application/json',
-      Authorization: 'fsq3qbL9ORBTq2ZaS6TUHxpAQZNDJjTlkT2lBeAynwmhZ8I='
-    }
-  };
-
-  fetch(`https://api.foursquare.com/v3/places/search?query=${Search}&ll=${location.coords.latitude}%2C${location.coords.longitude}&radius=100000`, options)
-
-
-    .then(res => res.json())
-    .then(res => {
-      setPlacesDetails(res.results)
-    })
-    .catch(err => console.error(err));
-  // console.log(Search)
 }
 
 
 
 
+
+// const searchPlaces = () => {
+//   const options = {
+//     method: 'GET',
+//     headers: {
+//       accept: 'application/json',
+//       Authorization: 'fsq3qbL9ORBTq2ZaS6TUHxpAQZNDJjTlkT2lBeAynwmhZ8I='
+//     }
+//   };
+
+//   fetch(`https://api.foursquare.com/v3/places/search?query=${Search}&ll=${location.coords.latitude}%2C${location.coords.longitude}&radius=100000`, options)
+
+
+//     .then(res => res.json())
+//     .then(res => {
+//       setPlacesDetails(res.results)
+//     })
+//     .catch(err => console.error(err));
+//   // console.log(Search)
+// }
+// useEffect(()=>{
+  
+
+// fetch(`https://maps.gomaps.pro/maps/api/place/details/json?place_id=${place_id}&key=YOUR_API_KEY`)
+// .then(response => response.json())
+// .then(data => {
+//   const location = data.result.geometry.location;
+//   console.log(`Latitude: ${location.lat}, Longitude: ${location.lng}`);
+// })
+// .catch(err => console.log(err));
+
+// },[])
+
+
+const handlePlaceSelect = (item) => {
+  // Use place.place_id to get more details about this place
+  fetch(`https://maps.gomaps.pro/maps/api/place/details/json?place_id=${item.place_id}&key=YOUR_API_KEY`)
+    .then((res) => res.json())
+    .then((data) => {
+      const location = data.result.geometry.location; // Extract latitude and longitude
+      // setSelectedPlace(location); // Update the selected place state
+    console.log(location);
+    
+    })
+    .catch((err) => console.log(err));
+};
 
 
 return (
@@ -124,63 +151,19 @@ return (
       {placesDetails && <FlatList
         data={placesDetails}
 
-        renderItem={({ item }: { item: { name: string } }) => {
-          return <View style={styles.list}>
-            <Text>{item.name}</Text>
-          </View>
+        renderItem={({ item }: { item: { description: string } }) => {
+     
+
+return <View style={styles.conChild}  onPress={() => {handlePlaceSelect(item)}}>
+
+<Text style={styles.conText}>{item.description}</Text>
+
+</View>
+
         }}
-        keyExtractor={(item: { fsq_id: string }) => item.fsq_id
+        keyExtractor={(item: { place_id: string }) => item.place_id
         }
       />}
-{/* {placesDetails  && <View style={styles.con}> 
-
-<FlatList
-        data={placesDetails}
-        renderItem={({item}) =>{
-
-return <View style={styles.conChild}>
-
-<Text style={styles.conText}></Text>
-
-</View>
-        }}
-
-        keyExtractor={item => item.id}
-      />
-
-      
-      
-</View> } */}
-{/* 
- {placesDetails && <FlatList
-        data={placesDetails}
-        // renderItem={(item:{description:string}) => {
-        renderItem={({item}) => {
-
-// return <View style={styles.con}>
-
-return <View style={styles.conChild}>
-
-<Text style={styles.conText}>skbdsbdksbdk</Text>
-
-</View>
-
-
-   
-
-
-
-        } }
-        keyExtractor={item => item.place_id}
-      />
-
-}   */}
-
-
-
-
-
-
 
 
 
@@ -235,7 +218,7 @@ const styles = StyleSheet.create({
 
   map: {
     width: '100%',
-    height: '100%',
+    height: '48%',
   },
   input: {
     height:60,
@@ -248,7 +231,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#DDDDDD',
     padding: 13,
-    margin:10,
+    marginTop:0,
     // marginTop:0,r
     borderRadius:20,
     marginHorizontal:100
