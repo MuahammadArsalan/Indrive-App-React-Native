@@ -135,9 +135,6 @@ function poly () {
 
 
 return (
-
-
-
   <View style={styles.containera}>
 
 
