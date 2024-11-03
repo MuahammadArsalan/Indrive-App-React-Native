@@ -77,6 +77,7 @@ function searchPlacesDescFunc(){
 })
 
 
+
 // console.log(res)
 : alert('Not Found')} 
 
@@ -108,7 +109,7 @@ setPlacesDetailsDesc(null)
 
 const singlePlace = () => {
   // setPlacesDetailsDesc(null);
-//  console.log( placesDetailsLL.lat);
+
  
   {placesDetailsLL&& setRegion({
     latitude: placesDetailsLL.lat,
@@ -121,18 +122,6 @@ const singlePlace = () => {
 
 
 
-// useEffect(()=>{
-  
-
-// fetch(`https://maps.gomaps.pro/maps/api/place/details/json?place_id=${place_id}&key=YOUR_API_KEY`)
-// .then(response => response.json())
-// .then(data => {
-//   const location = data.result.geometry.location;
-//   console.log(`Latitude: ${location.lat}, Longitude: ${location.lng}`);
-// })
-// .catch(err => console.log(err));
-
-// },[])
 
 function poly () {
   fetch(`https://maps.gomaps.pro/maps/api/directions/json?origin=${location.coords.latitude},${location.coords.longitude}&destination=${placesDetailsLL.lat},${placesDetailsLL.lng}&key=AlzaSyiiV2_A9cr7d7jCOvGIqIJJh94acsfgrCc`)
