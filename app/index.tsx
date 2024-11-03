@@ -143,7 +143,7 @@ return (
         onChangeText={setSearch}
         value={Search}
         placeholder="Search.."
-      />
+    />
 <TouchableOpacity style={styles.button}>
         <Text  onPress={() => {searchPlacesDescFunc()}}>Search</Text>
       </TouchableOpacity>
