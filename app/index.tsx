@@ -146,6 +146,7 @@ return (
         <Text  onPress={() => {searchPlacesDescFunc()}}>Search</Text>
       </TouchableOpacity>
 
+
       {placesDetailsDesc && <FlatList
         data={placesDetailsDesc}
      
