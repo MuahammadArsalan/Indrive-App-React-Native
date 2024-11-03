@@ -137,7 +137,6 @@ function poly () {
 return (
   <View style={styles.containera}>
 
-
   <TextInput
         style={styles.input}
         onChangeText={setSearch}
