@@ -134,7 +134,14 @@ const singlePlace = () => {
 
 // },[])
 
-
+function poly () {
+  fetch(`https://maps.gomaps.pro/maps/api/directions/json?origin=${location.coords.latitude},${location.coords.longitude}&destination=${placesDetailsLL.lat},${placesDetailsLL.lng}&key=AlzaSyiiV2_A9cr7d7jCOvGIqIJJh94acsfgrCc`)
+  .then(response => response.json())
+  .then(data => {
+    console.log(data); 
+  })
+  .catch(err => console.error(err));
+}
 
 
 return (
@@ -165,7 +172,7 @@ return (
 
 return <View style={styles.conChild}  >
 
-<Text onPress={()=>{searchPlacesllFunc(item), singlePlace()}} style={styles.conText}>{item.description}</Text>
+<Text onPress={()=>{searchPlacesllFunc(item), singlePlace(),poly()}} style={styles.conText}>{item.description}</Text>
 
 </View>
 
